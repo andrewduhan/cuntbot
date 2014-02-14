@@ -1,0 +1,4 @@
+cuntbot
+=======
+
+IRC chatbot
