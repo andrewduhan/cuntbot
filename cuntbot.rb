@@ -12,8 +12,8 @@ require_relative "lib/cinch/plugins/urls"
 
 bot = Cinch::Bot.new do
   configure do |c|
-    c.server   = "irc.killthemayor.com"
-    c.channels = ["#cunts"]
+    c.server   = "irc_server.com"
+    c.channels = ["#channel"]
     c.nick     = "outlander"
     c.user     = "cuntbot"
     c.realname = "cuntbot"
