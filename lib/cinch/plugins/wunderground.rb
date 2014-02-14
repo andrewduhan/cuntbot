@@ -3,7 +3,7 @@ require 'ostruct'
 require 'open-uri'
 require 'json'
 
-WUNDERGROUND_KEY='d50a9b9c6fe45276'
+WUNDERGROUND_KEY = File.open('wunderground_key').read
 
 module Cinch
   module Plugins
