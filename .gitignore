@@ -16,7 +16,7 @@ tmp
 learned_knowledge
 knowledge
 config.yaml
-wunderground_key
+wunderground.yaml
 
 # YARD artifacts
 .yardoc

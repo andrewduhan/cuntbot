@@ -2,8 +2,9 @@ require 'cinch'
 require 'ostruct'
 require 'open-uri'
 require 'json'
+require 'yaml'
 
-WUNDERGROUND_KEY = File.open('wunderground_key').read
+WUNDERGROUND_KEY = YAML.load_file('wunderground.yaml')["key"]
 
 module Cinch
   module Plugins
