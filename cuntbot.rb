@@ -11,15 +11,15 @@ require_relative "lib/cinch/plugins/spew"
 require_relative "lib/cinch/plugins/wunderground"
 require_relative "lib/cinch/plugins/urls"
 
-config = YAML.load_file('config.yaml')
+setup = YAML.load_file('config/setup.yaml')
 
 bot = Cinch::Bot.new do
   configure do |c|
-    c.server   = config["server"]
-    c.channels = config["channels"]
-    c.nick     = config["nick"]
-    c.user     = config["user"]
-    c.realname = config["realname"]
+    c.server   = setup["server"]
+    c.channels = setup["channels"]
+    c.nick     = setup["nick"]
+    c.user     = setup["user"]
+    c.realname = setup["realname"]
     c.plugins.plugins = [
       Cinch::Plugins::Seen,
       Cinch::Plugins::UrbanDictionary,

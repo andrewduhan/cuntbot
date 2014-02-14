@@ -4,7 +4,7 @@ require 'open-uri'
 require 'json'
 require 'yaml'
 
-WUNDERGROUND_KEY = YAML.load_file('wunderground.yaml')["key"]
+WUNDERGROUND_KEY = YAML.load_file('config/wunderground.yaml')["key"]
 
 module Cinch
   module Plugins
