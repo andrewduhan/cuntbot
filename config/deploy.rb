@@ -40,10 +40,18 @@ namespace :deploy do
   task :restart do
     on roles(:app), in: :sequence, wait: 5 do
       # Your restart mechanism here, for example:
-      execute :touch, release_path.join('tmp/restart.txt')
+      # execute :touch, release_path.join('tmp/restart.txt')
     end
   end
 
-  after :publishing, :restart
+  task :symlink_config do
+    run "rm -f #{current_path} && ln -s #{release_path} #{current_path}"
+    run "ln -nfs #{shared_path}/knowledge #{release_path}/knowledge"
+    run "ln -nfs #{shared_path}/leadned_knowledge #{release_path}/learned_knowledge"
+  end
+
+  after :publishing, :symlink_config
+
+
 
 end
