@@ -14,8 +14,8 @@ test/version_tmp
 
 learned_knowledge
 knowledge
-config.yaml
-wunderground.yaml
+config/setup.yaml
+config/wunderground.yaml
 
 # YARD artifacts
 .yardoc

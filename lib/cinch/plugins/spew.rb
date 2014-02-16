@@ -12,14 +12,13 @@ module Cinch::Plugins
       File.write('learned_knowledge', message + "\n", File.size('learned_knowledge'), mode: 'a') if  m.message.length > 50
     end
 
-    def execute(m, phrase)
+    def execute(m, pattern)
       matches = []
-      File.open('learned_knowledge') do |f|
-        f.each do |line|
-          matches << line if line.match(/#{phrase}/i)
-        end
+      `grep -is "#{pattern}" learned_knowledge`.split(/\n/).each do |line|
+        matches << line if line.match(/#{pattern}/i)
       end
-      m.reply matches.length > 0 ? matches[rand(0..matches.length-1)] : "\"#{phrase}\" ain't in the logs!"
+
+      m.reply matches.length > 0 ? matches[rand(0..matches.length-1)] : "\"#{pattern}\" ain't in the logs!"
     end
 
   end
