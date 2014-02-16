@@ -12,6 +12,9 @@ require_relative "lib/cinch/plugins/wunderground"
 require_relative "lib/cinch/plugins/urls"
 
 setup = YAML.load_file('config/setup.yaml')
+File.open('pid', 'w') do |f|
+  f.puts(Process.pid)
+end
 
 bot = Cinch::Bot.new do
   configure do |c|

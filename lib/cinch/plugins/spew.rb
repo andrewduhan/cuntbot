@@ -16,7 +16,7 @@ module Cinch::Plugins
       matches = []
       File.open('learned_knowledge') do |f|
         f.each do |line|
-          matches << line if line.include?(phrase)
+          matches << line if line.match(/#{phrase}/i)
         end
       end
       m.reply matches.length > 0 ? matches[rand(0..matches.length-1)] : "\"#{phrase}\" ain't in the logs!"

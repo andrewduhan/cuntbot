@@ -36,22 +36,37 @@ set :deploy_to, '~/cuntbot'
 
 namespace :deploy do
 
-  desc 'Restart application'
-  task :restart do
-    on roles(:app), in: :sequence, wait: 5 do
-      # Your restart mechanism here, for example:
-      # execute :touch, release_path.join('tmp/restart.txt')
+  task :symlink_config do
+    on roles(:all) do
+      execute  "ln -nfs #{shared_path}/knowledge #{release_path}/knowledge"
+      execute  "ln -nfs #{shared_path}/learned_knowledge #{release_path}/learned_knowledge"
+      execute  "rm -rf #{release_path}/config && ln -nfs #{shared_path}/config #{release_path}/config"
+      execute  "rm -f #{current_path} && ln -s #{release_path} #{current_path}"
     end
   end
 
-  task :symlink_config do
-    run "rm -f #{current_path} && ln -s #{release_path} #{current_path}"
-    run "ln -nfs #{shared_path}/knowledge #{release_path}/knowledge"
-    run "ln -nfs #{shared_path}/leadned_knowledge #{release_path}/learned_knowledge"
-  end
+  # task :kill_running_bot do
+  #   on roles(:all) do
+  #     begin
+  #       execute  "cat #{shared_path}/pid | xargs kill -9"
+  #     rescue
+  #     end
+  #   end
+  # end
+
+  # task :start_new_bot do
+  #   on roles(:all) do
+  #     execute  "cd #{current_path}; ruby cuntbot.rb &"
+  #     execute  "#{shared_path}/pid < $!"
+  #   end
+  # end
+
+  # task :after_publishing do
+  #   invoke 'deploy:symlink_config'
+  #   invoke 'deploy:kill_running_bot'
+  #   invoke 'deploy:start_new_bot'
+  # end
 
   after :publishing, :symlink_config
-
-
 
 end

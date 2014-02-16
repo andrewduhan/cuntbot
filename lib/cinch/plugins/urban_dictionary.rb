@@ -11,7 +11,7 @@ module Cinch::Plugins
     end
 
     def execute(m, word)
-      m.reply(lookup(word) || "no match for #{word}", true)
+      m.reply (lookup(word) || "no match for #{word}")
     end
   end
 end
