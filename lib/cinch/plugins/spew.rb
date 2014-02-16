@@ -14,8 +14,10 @@ module Cinch::Plugins
 
     def execute(m, pattern)
       matches = []
-      `grep -is "#{pattern}" learned_knowledge`.split(/\n/).each do |line|
-        matches << line if line.match(/#{pattern}/i)
+      File.open('learned_knowledge') do |f|
+        f.each_line do |line|
+          matches << line if line.match(/#{pattern}/i)
+        end
       end
 
       m.reply matches.length > 0 ? matches[rand(0..matches.length-1)] : "\"#{pattern}\" ain't in the logs!"
