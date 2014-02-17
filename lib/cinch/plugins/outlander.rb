@@ -8,7 +8,7 @@ module Cinch::Plugins
     def initialize(*args)
       super
       @markov = MarkyMarkov::TemporaryDictionary.new
-      @markov.parse_file "knowledge"
+      @markov.parse_file "data/knowledge"
       @timer = Time.now
     end
 

@@ -38,8 +38,8 @@ namespace :deploy do
 
   task :symlink_config do
     on roles(:all) do
-      execute  "ln -nfs #{shared_path}/knowledge #{release_path}/knowledge"
-      execute  "ln -nfs #{shared_path}/learned_knowledge #{release_path}/learned_knowledge"
+      execute  "ln -nfs #{shared_path}/knowledge #{release_path}/data/knowledge"
+      execute  "ln -nfs #{shared_path}/learned_knowledge #{release_path}/data/learned_knowledge"
       execute  "rm -rf #{release_path}/config && ln -nfs #{shared_path}/config #{release_path}/config"
       execute  "rm -f #{current_path} && ln -s #{release_path} #{current_path}"
     end

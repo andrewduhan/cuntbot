@@ -10,6 +10,7 @@ require_relative "lib/cinch/plugins/outlander"
 require_relative "lib/cinch/plugins/spew"
 require_relative "lib/cinch/plugins/wunderground"
 require_relative "lib/cinch/plugins/urls"
+require_relative "lib/cinch/plugins/note"
 
 setup = YAML.load_file('config/setup.yaml')
 
@@ -21,12 +22,13 @@ bot = Cinch::Bot.new do
     c.user     = setup["user"]
     c.realname = setup["realname"]
     c.plugins.plugins = [
-      Cinch::Plugins::Seen,
-      Cinch::Plugins::UrbanDictionary,
       Cinch::Plugins::Outlander,
+      Cinch::Plugins::Note,
+      Cinch::Plugins::Seen,
       Cinch::Plugins::Spew,
-      Cinch::Plugins::Wunderground,
-      Cinch::Plugins::Urls
+      Cinch::Plugins::UrbanDictionary,
+      Cinch::Plugins::Urls,
+      Cinch::Plugins::Wunderground
     ]
   end
 end

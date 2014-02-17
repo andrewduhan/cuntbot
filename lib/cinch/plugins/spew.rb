@@ -7,14 +7,18 @@ module Cinch::Plugins
 
     match /spew (.+)/
 
+    DATA_FILE = 'data/learned_knowledge'
+
     def listen(m)
-      message = m.message.gsub(/outlander/, m.user.nick)
-      File.write('learned_knowledge', message + "\n", File.size('learned_knowledge'), mode: 'a') if  m.message.length > 50
+      unless m.message.match(/^!/)
+        message = m.message.gsub(/outlander/, m.user.nick)
+        File.write(DATA_FILE, message + "\n", File.size(DATA_FILE), mode: 'a') if  m.message.length > 50
+      end
     end
 
     def execute(m, pattern)
       matches = []
-      File.open('learned_knowledge') do |f|
+      File.open(DATA_FILE) do |f|
         f.each_line do |line|
           matches << line if line.match(/#{pattern}/i)
         end
