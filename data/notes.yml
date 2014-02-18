@@ -1,0 +1,7 @@
+---
+- :sender: nobody
+  :recipient: nobody
+  :id: 1
+  :note: placeholder note!
+  :delivered: true
+  :time: 2014-02-14 18:00:00.000000000 -06:00

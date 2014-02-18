@@ -3,6 +3,7 @@ require 'open-uri'
 require 'nokogiri'
 require 'cgi'
 require 'yaml'
+require 'active_hash'
 
 require_relative "lib/cinch/plugins/seen"
 require_relative "lib/cinch/plugins/urban_dictionary"
@@ -10,11 +11,11 @@ require_relative "lib/cinch/plugins/outlander"
 require_relative "lib/cinch/plugins/spew"
 require_relative "lib/cinch/plugins/wunderground"
 require_relative "lib/cinch/plugins/urls"
-require_relative "lib/cinch/plugins/note"
+require_relative "lib/cinch/plugins/notes"
 
 setup = YAML.load_file('config/setup.yaml')
 
-bot = Cinch::Bot.new do
+@bot = Cinch::Bot.new do
   configure do |c|
     c.server   = setup["server"]
     c.channels = setup["channels"]
@@ -23,7 +24,7 @@ bot = Cinch::Bot.new do
     c.realname = setup["realname"]
     c.plugins.plugins = [
       Cinch::Plugins::Outlander,
-      Cinch::Plugins::Note,
+      Cinch::Plugins::Notes,
       Cinch::Plugins::Seen,
       Cinch::Plugins::Spew,
       Cinch::Plugins::UrbanDictionary,
@@ -33,4 +34,4 @@ bot = Cinch::Bot.new do
   end
 end
 
-bot.start
+@bot.start

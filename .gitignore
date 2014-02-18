@@ -3,6 +3,7 @@
 .bundle
 .config
 .rvmrc
+.DS_Store
 coverage
 InstalledFiles
 lib/bundler/man

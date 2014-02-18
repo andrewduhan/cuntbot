@@ -18,10 +18,13 @@ module Cinch::Plugins
     def initialize(*args)
       super
       @users = {}
+      @seen_file = 'data/seen.yml'
+      load_file
     end
 
     def listen(m)
-      @users[m.user.nick] = SeenStruct.new(m.user, m.message, Time.now)
+      @users[m.user.nick] = SeenStruct.new(m.user.nick, m.message, Time.now)
+      save_file
     end
 
     def execute(m, nick)
@@ -33,6 +36,19 @@ module Cinch::Plugins
         m.reply @users[nick].to_s
       else
         m.reply "I ain't seen #{nick}!"
+      end
+    end
+
+    def save_file
+      File.open(@seen_file, 'w') { |f|
+        f.write(@users.values.map{|v| v.to_h}.to_yaml)
+      }
+    end
+
+    def load_file
+      data = YAML.load_file(@seen_file) || []
+      data.each do |d|
+        @users[d[:who]] = SeenStruct.new(d[:who], d[:what], d[:time])
       end
     end
   end
