@@ -15,7 +15,7 @@ class Note < ActiveYaml::Base
       days, hrs = hrs.divmod(24)
       "#{days.to_i}d #{hrs.to_i}h"
     end
-    "note for you, #{recipient}! [#{time_string}]: <#{sender}> #{note}"
+    "note for you, #{recipient}! [#{time_string}] <#{sender}> #{note}"
   end
 
   def save(*args)

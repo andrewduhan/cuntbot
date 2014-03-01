@@ -17,13 +17,8 @@ module Cinch::Plugins
     end
 
     def execute(m, pattern)
-      matches = []
-      File.open(DATA_FILE) do |f|
-        f.each_line do |line|
-          matches << line if line.match(/#{pattern}/i)
-        end
-      end
-
+      safe_pattern = Regexp.compile(pattern).to_s.match(/:(.*)\)/)[1]
+      matches = `grep -i "#{safe_pattern}" data/learned_knowledge`.split(/\n/)
       m.reply matches.length > 0 ? matches[rand(0..matches.length-1)] : "\"#{pattern}\" ain't in the logs!"
     end
 

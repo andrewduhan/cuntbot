@@ -12,6 +12,7 @@ require_relative "lib/cinch/plugins/spew"
 require_relative "lib/cinch/plugins/wunderground"
 require_relative "lib/cinch/plugins/urls"
 require_relative "lib/cinch/plugins/notes"
+require_relative "lib/cinch/plugins/piga"
 
 setup = YAML.load_file('config/setup.yaml')
 
@@ -24,6 +25,7 @@ setup = YAML.load_file('config/setup.yaml')
     c.realname = setup["realname"]
     c.plugins.plugins = [
       Cinch::Plugins::Outlander,
+      Cinch::Plugins::Piga,
       Cinch::Plugins::Notes,
       Cinch::Plugins::Seen,
       Cinch::Plugins::Spew,
