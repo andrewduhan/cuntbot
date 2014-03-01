@@ -10,6 +10,8 @@ set :repo_url, 'git@github.com:andrewduhan/cuntbot.git'
 # Default deploy_to directory is /var/www/my_app
 set :deploy_to, '~/cuntbot'
 
+set :default_env, { rvm_bin_path: '~/.rvm/bin' }
+
 # Default value for :scm is :git
 # set :scm, :git
 
