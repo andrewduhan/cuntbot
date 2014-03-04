@@ -13,6 +13,7 @@ require_relative "lib/cinch/plugins/wunderground"
 require_relative "lib/cinch/plugins/urls"
 require_relative "lib/cinch/plugins/notes"
 require_relative "lib/cinch/plugins/piga"
+require_relative "lib/cinch/plugins/the_fucking_weather"
 
 setup = YAML.load_file('config/setup.yaml')
 
@@ -29,6 +30,7 @@ setup = YAML.load_file('config/setup.yaml')
       Cinch::Plugins::Notes,
       Cinch::Plugins::Seen,
       Cinch::Plugins::Spew,
+      Cinch::Plugins::TheFuckingWeather,
       Cinch::Plugins::UrbanDictionary,
       Cinch::Plugins::Urls,
       Cinch::Plugins::Wunderground
