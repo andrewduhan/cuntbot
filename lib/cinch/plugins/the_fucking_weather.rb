@@ -1,3 +1,5 @@
+require_relative "wunderground"
+
 require 'cinch'
 
 module Cinch::Plugins
@@ -5,27 +7,61 @@ module Cinch::Plugins
     include Cinch::Plugin
 
     match /fweather (.+)/
-    def fucking_look_it_up(search)
-      url = "http://www.thefuckingweather.com/?where=#{CGI.escape(search)}"
-      page = Nokogiri::HTML(open(url))
-      if page
-        begin
-          if page.at("#locationDisplaySpan") && page.at("#locationDisplaySpan").text.length > 1
-            location = page.at("#locationDisplaySpan").text.strip.upcase
-            main_phrase = page.at('.remarkContainer .remark').text.strip
-            sub_phrase = page.at('.content .flavor').text.strip
-            response = location + "?! " + main_phrase + "            " + sub_phrase
-          else
-            response = "I CAN'T FUCKING FIND " + search.upcase
-          end
-        rescue
-        end
-      end
-      response ||= "SOMETHING'S FUCKING BROKEN"
+
+    def initialize(*args)
+      super
+      @bylines = setup = YAML.load_file('data/fucking_weather.yaml')
     end
 
-    def execute(m, word)
-      m.reply fucking_look_it_up(word)
+    def execute(msg, location)
+      begin
+        current_conditions = Wunderground::get_conditions(location)
+        puts current_conditions.status
+        case current_conditions.status
+        when "minlimit"
+          return msg.reply "SLOW THE FUCK DOWN"
+        when "daylimit"
+          return msg.reply "WE'RE FUCKING DONE FOR THE DAY"
+        when "nolocation"
+          return msg.reply("I CAN'T FUCKING FIND " + location.upcase)
+        when "ambiguouslocation"
+          return msg.reply("THERE'S MORE THAN ONE FUCKING " + location.upcase)
+        when "nodata"
+          return msg.reply "THE WEATHER IS FUCKING BROKEN"
+        when "ok"
+          return msg.reply(fucking_summary(current_conditions))
+        else
+          return msg.reply "OW MY BRANE"
+        end
+      rescue
+        return msg.reply "I'M FUCKING BROKEN"
+      end
     end
+
+    def fucking_summary(current_conditions)
+      temp_f = current_conditions.temp_f.to_f
+      display_temp = current_conditions.country == "US" ? current_conditions.temp_f.to_s + "F" : current_conditions.temp_c.to_s + "C"
+
+      case
+      when temp_f < 35
+        general_condition = "freezing"
+      when temp_f >= 35 && temp_f < 50
+        general_condition = "cold"
+      when temp_f >= 50 && temp_f < 65
+        general_condition = "chilly"
+      when temp_f >= 65 && temp_f < 80
+        general_condition = "nice"
+      when temp_f >= 80 && temp_f < 95
+        general_condition = "warm"
+      when temp_f >= 95
+        general_condition = "hot"
+      else
+        general_condition = "derp"
+      end
+
+      byline = @bylines[general_condition][rand(0..@bylines[general_condition].length-1)]
+      "#{display_temp} IN #{current_conditions.city.upcase}?! IT'S FUCKING #{general_condition.upcase}! #{byline}"
+    end
+
   end
 end

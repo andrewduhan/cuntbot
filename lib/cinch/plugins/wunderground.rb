@@ -3,70 +3,63 @@ require 'ostruct'
 require 'open-uri'
 require 'json'
 require 'yaml'
+require_relative '../../wunder_throttle'
 
 WUNDERGROUND_KEY = YAML.load_file('config/wunderground.yaml')["key"]
 
-module Cinch
-  module Plugins
-    class Wunderground
+module Wunderground
 
-      include Cinch::Plugin
+  def self.get_conditions(location)
 
-      match /weather (.+)/
-
-      def initialize(*args)
-        super
-        @throttle = {req_minute: [], req_day: []}
+    output = OpenStruct.new()
+    output[:status] = WunderThrottle.instance.check
+    # begin
+      if output[:status]  == 'ok'
+        location = geolookup(location)
+        output[:status] = 'nolocation' if location.nil?
+        output[:status] = 'ambiguouslocation' if location == 'ambiguouslocation'
       end
 
-      def execute(msg, query)
-        @throttle[:req_minute].reject!{ |r_m| r_m < Time.now - 60 }
-        @throttle[:req_day].reject!{ |r_d| r_d < Time.now - 66400 }
-
-        return msg.reply "give it a minute man" if @throttle[:req_minute].length >= 4
-        return msg.reply "we've hit our 24hr limit" if @throttle[:req_day].length >= 20
-
-        @throttle[:req_minute] << Time.now
-        @throttle[:req_day] << Time.now
-
-        # msg.reply "cool."
-        location = geolookup(query)
-        return msg.reply "weather station on fire." if location.nil?
-
-        data = get_conditions(location)
-        return msg.reply 'network on fire.' if data.nil?
-
-        msg.reply(weather_summary(data))
+      if output[:status]  == 'ok'
+        data = JSON.parse(open("http://api.wunderground.com/api/#{WUNDERGROUND_KEY}/conditions#{location}.json").read)
+        puts data.to_s
+        output[:status] = 'nodata' if data.nil?
       end
 
-      def geolookup(zipcode)
-        location = JSON.parse(open("http://api.wunderground.com/api/#{WUNDERGROUND_KEY}/geolookup/q/#{zipcode}.json").read)
-        location['location']['l']
-      rescue
-        nil
-      end
-
-      def get_conditions(location)
-        data          = JSON.parse(open("http://api.wunderground.com/api/#{WUNDERGROUND_KEY}/conditions#{location}.json").read)
+      if output[:status]  == 'ok' && data
+        # data
         current       = data['current_observation']
         location_data = current['display_location']
-
-        OpenStruct.new(
-          location:          location_data['full'],
-          weather:           current['weather'],
-          temp:              current['temperature_string'],
-          relative_humidity: current['relative_humidity'],
-          feels_like:        current['feelslike_string']
-        )
-      rescue
-        nil
+        output[:location]           = location_data['full']
+        output[:country]            = location_data['country']
+        output[:state]              = location_data['state']
+        output[:city]               = location_data['city']
+        output[:weather]            = current['weather']
+        output[:temperature_string] = current['temperature_string']
+        output[:temp_f]             = current['temp_f']
+        output[:temp_c]             = current['temp_c']
+        output[:wind_mph]           = current['wind_mph']
+        output[:wind_gust_mph]      = current['wind_gust_mph']
+        output[:relative_humidity]  = current['relative_humidity']
+        output[:feelslike_string]   = current['feelslike_string']
       end
+    # rescue
+      # output[:status] = 'error'
+    # end
 
-      def weather_summary(data)
-        "#{data.location}: #{data.weather}, #{data.temp}.  Feels like #{data.feels_like}, man."
-      rescue
-        'i am on fire.'
-      end
-    end
+    output
   end
+
+  def self.geolookup(location)
+    puts "fetching " + URI.encode("http://api.wunderground.com/api/#{WUNDERGROUND_KEY}/geolookup/q/#{location}.json").to_s
+    location = JSON.parse(open(URI.encode("http://api.wunderground.com/api/#{WUNDERGROUND_KEY}/geolookup/q/#{location}.json")).read)
+    if location['response']['results']  # returned more than one location
+      'ambiguouslocation'
+    else
+      location['location']['l']
+    end
+  rescue
+    nil
+  end
+
 end
