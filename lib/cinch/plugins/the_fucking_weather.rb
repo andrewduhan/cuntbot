@@ -16,7 +16,6 @@ module Cinch::Plugins
     def execute(msg, location)
       begin
         current_conditions = Wunderground::get_conditions(location)
-        puts current_conditions.status
         case current_conditions.status
         when "minlimit"
           return msg.reply "SLOW THE FUCK DOWN"
@@ -40,7 +39,7 @@ module Cinch::Plugins
 
     def fucking_summary(current_conditions)
       temp_f = current_conditions.temp_f.to_f
-      display_temp = current_conditions.country == "US" ? current_conditions.temp_f.to_s + "F" : current_conditions.temp_c.to_s + "C"
+      display_temp = current_conditions.display_location["country"] == "US" ? current_conditions.temp_f.to_s + "F" : current_conditions.temp_c.to_s + "C"
 
       case
       when temp_f < 35
@@ -60,7 +59,7 @@ module Cinch::Plugins
       end
 
       byline = @bylines[general_condition][rand(0..@bylines[general_condition].length-1)]
-      "#{display_temp} IN #{current_conditions.city.upcase}?! IT'S FUCKING #{general_condition.upcase}! #{byline}"
+      "#{display_temp} IN #{current_conditions.display_location["city"].upcase}?! IT'S FUCKING #{general_condition.upcase}! #{byline}"
     end
 
   end

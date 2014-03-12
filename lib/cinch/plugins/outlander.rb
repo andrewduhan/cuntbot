@@ -16,19 +16,25 @@ module Cinch::Plugins
     listen_to :channel
 
     def burp(m)
-      message_word_length = m.message.scan(' ').length
-      max_reply_length = message_word_length > 40 ? 40 : message_word_length
-      max_reply_length = 10 if max_reply_length < 10
-      max_reply_length = max_reply_length * 2
-      response = (@markov.generate_n_words rand(10..max_reply_length)).split(' ').each { |word|
+      blurt = rand(1..2).even? ? (@markov.generate_n_words rand(10..50)) : (@markov.generate_n_sentences 1)
+      response = blurt.split(' ').each { |word|
         random_number = rand(0..100)
-        if random_number > 80
+        if random_number > 95
           word.upcase!
-        elsif random_number < 20
+        elsif random_number < 2
           word.downcase!
         end
       }.join(' ')
-      sleep(rand(2..6))
+
+      # try to not end with dumb stuff
+      response = response.gsub(/ (of|to|the)$/i,'')
+
+      if rand(0..2) > 0 # 1/3 chance of adding some punctuation
+        punctuation = ['!','?'][rand(0..1)]
+        response = response.gsub(/[,.;]$/, '')
+        response += punctuation
+      end
+      sleep(rand(3..10))
       m.reply response
     end
 

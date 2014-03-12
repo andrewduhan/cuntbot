@@ -31,7 +31,7 @@ module Cinch::Plugins
     end
 
     def weather_summary(current_conditions)
-      "#{current_conditions.location}: #{current_conditions.weather}, #{current_conditions.temperature_string}.  Feels like #{current_conditions.feelslike_string}."
+      "#{current_conditions.display_location["full"]}: #{current_conditions.weather}, #{current_conditions.temperature_string}.  Feels like #{current_conditions.feelslike_string}."
     rescue
       'brain on fire.'
     end
