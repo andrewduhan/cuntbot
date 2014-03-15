@@ -4,7 +4,7 @@ module Cinch::Plugins
   class UrbanDictionary
     include Cinch::Plugin
 
-    match /udict (.+)/
+    match /udict (.+)/i
     def lookup(word)
       url = "http://www.urbandictionary.com/define.php?term=#{CGI.escape(word)}"
       CGI.unescape_html Nokogiri::HTML(open(url)).at("div.meaning").text.gsub(/\s+/, ' ') rescue nil

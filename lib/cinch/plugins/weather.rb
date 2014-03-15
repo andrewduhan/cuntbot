@@ -6,7 +6,7 @@ module Cinch::Plugins
   class Weather
     include Cinch::Plugin
 
-    match /weather (.+)/
+    match /weather (.+)/i
 
     def execute(msg, query)
 

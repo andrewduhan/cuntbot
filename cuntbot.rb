@@ -4,8 +4,6 @@ require 'nokogiri'
 require 'cgi'
 require 'yaml'
 require 'active_hash'
-# require_relative "lib/cinch/plugins/wunderground"
-
 
 require_relative "lib/cinch/plugins/notes"
 require_relative "lib/cinch/plugins/outlander"

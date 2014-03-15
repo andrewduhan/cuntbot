@@ -5,7 +5,7 @@ module Cinch::Plugins
 
     include Cinch::Plugin
 
-    match /piga/
+    match /piga/i
 
     def execute(m)
       result = []

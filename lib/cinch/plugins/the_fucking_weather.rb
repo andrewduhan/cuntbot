@@ -6,7 +6,7 @@ module Cinch::Plugins
   class TheFuckingWeather
     include Cinch::Plugin
 
-    match /fweather (.+)/
+    match /fweather (.+)/i
 
     def initialize(*args)
       super

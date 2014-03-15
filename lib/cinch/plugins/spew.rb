@@ -5,9 +5,9 @@ module Cinch::Plugins
     include Cinch::Plugin
     listen_to :channel
 
-    match /spew (.+)/
+    match /spew (.+)/i
 
-    DATA_FILE = 'data/learned_knowledge'
+    DATA_FILE = 'data/spewfile'
 
     def listen(m)
       unless m.message.match(/^!/)
@@ -18,7 +18,7 @@ module Cinch::Plugins
 
     def execute(m, pattern)
       safe_pattern = Regexp.compile(pattern).to_s.match(/:(.*)\)/)[1]
-      matches = `grep -i "#{safe_pattern}" data/learned_knowledge`.split(/\n/)
+      matches = `grep -i "#{safe_pattern}" #{DATA_FILE}`.split(/\n/)
       m.reply matches.length > 0 ? matches[rand(0..matches.length-1)] : "\"#{pattern}\" ain't in the logs!"
     end
 

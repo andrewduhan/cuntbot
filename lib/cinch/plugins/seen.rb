@@ -13,7 +13,7 @@ module Cinch::Plugins
 
     include Cinch::Plugin
     listen_to :channel
-    match /seen (.+)/
+    match /seen (.+)/i
 
     def initialize(*args)
       super

@@ -19,6 +19,7 @@ class Note < ActiveYaml::Base
   end
 
   def save(*args)
+    # Write them all to disk so we don't lose them on restart
     super
     File.open(Note.full_path, 'w') do |file|
       file.write(Note.all.map(&:attributes).to_yaml)
@@ -28,7 +29,6 @@ class Note < ActiveYaml::Base
   def deliver
     self.delivered = true
     self.save
-    # Note.load_file
   end
 end
 
@@ -38,7 +38,7 @@ module Cinch::Plugins
     include Cinch::Plugin
     listen_to :join
     listen_to :channel
-    match /note (.+)/
+    match /note (.+)/i
 
     def listen(m)
       notes = Note.find_all_by_recipient_and_delivered(m.user.nick, false)

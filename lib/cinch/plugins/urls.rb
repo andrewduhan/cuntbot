@@ -10,7 +10,7 @@ module Cinch::Plugins
 
     include Cinch::Plugin
     listen_to :channel
-    match /urls ?(.+)?/
+    match /urls ?(.+)?/i
 
     def initialize(*args)
       super

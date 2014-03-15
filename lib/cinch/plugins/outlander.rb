@@ -8,7 +8,7 @@ module Cinch::Plugins
     def initialize(*args)
       super
       @markov = MarkyMarkov::TemporaryDictionary.new
-      @markov.parse_file "data/knowledge"
+      @markov.parse_file "data/BRANE"
       @timer = Time.now
     end
 
@@ -27,7 +27,7 @@ module Cinch::Plugins
       }.join(' ')
 
       # try to not end with dumb stuff
-      response = response.gsub(/ (of|to|the)$/i,'')
+      response = response.gsub(/ (of|to|the|i|,)$/i,'')
 
       if rand(0..2) > 0 # 1/3 chance of adding some punctuation
         punctuation = ['!','?'][rand(0..1)]
@@ -39,7 +39,7 @@ module Cinch::Plugins
     end
 
     def listen(m)
-      if (@timer + 60 < Time.now && rand(0..100) > 99) || (m.message =~ /#{@bot.nick}/)
+      if (@timer + 60 < Time.now && rand(0..100) > 99) || (m.message =~ /#{@bot.nick}/i)
         @timer = Time.now
         burp(m)
       end
