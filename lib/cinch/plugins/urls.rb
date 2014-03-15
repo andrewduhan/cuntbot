@@ -24,7 +24,7 @@ module Cinch::Plugins
 
     def execute(m, url_count = 3)
       if @urls.length == 0
-        m.reply "brane is empty"
+        m.reply "i got nothing"
       else
         url_count = url_count.to_i
         url_count = @urls.length if url_count > @urls.length
