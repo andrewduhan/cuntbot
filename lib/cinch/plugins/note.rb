@@ -1,6 +1,6 @@
 require 'cinch'
 
-class Note < ActiveYaml::Base
+class CuntbotNote < ActiveYaml::Base
   set_root_path "data"
   set_filename "notes"
 
@@ -19,10 +19,10 @@ class Note < ActiveYaml::Base
   end
 
   def save(*args)
-    # Write them all to disk so we don't lose them on restart
     super
-    File.open(Note.full_path, 'w') do |file|
-      file.write(Note.all.map(&:attributes).to_yaml)
+    # Write them all to disk so we don't lose them on restart
+    File.open(CuntbotNote.full_path, 'w') do |file|
+      file.write(CuntbotNote.all.map(&:attributes).to_yaml)
     end
   end
 
@@ -32,16 +32,22 @@ class Note < ActiveYaml::Base
   end
 end
 
-module Cinch::Plugins
 
-  class Notes
+
+module Cinch::Plugins
+  class Note
     include Cinch::Plugin
     listen_to :join
     listen_to :channel
     match /note (.+)/i
 
+    set :help, <<-EOF
+!note [target nick] [your message here]
+  Leave a note for a user/nick.  Notes will be shown when the target nick joins or speaks.
+EOF
+
     def listen(m)
-      notes = Note.find_all_by_recipient_and_delivered(m.user.nick, false)
+      notes = CuntbotNote.find_all_by_recipient_and_delivered(m.user.nick, false)
       if notes.length > 0
         notes.each do |note|
           m.reply(note.to_s)
@@ -58,7 +64,7 @@ module Cinch::Plugins
       elsif recipient == @bot.nick
         m.reply ("...it's like I'm not even here.")
       else
-        Note.create(sender: m.user.nick, recipient: recipient, note: exploded_message.join(' '), time: Time.now, delivered: false)
+        CuntbotNote.create(sender: m.user.nick, recipient: recipient, note: exploded_message.join(' '), time: Time.now, delivered: false)
         m.reply('got it.')
       end
     end

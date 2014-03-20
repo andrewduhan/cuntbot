@@ -7,18 +7,23 @@ module Cinch::Plugins
 
     match /spew (.+)/i
 
-    DATA_FILE = 'data/spewfile'
+    set :help, <<-EOF
+!spew [word or phrase or regex]
+  Find a random line in the chatlog.  Accepts simple regex:  Use .* as a wildcard and \\ to escape special characters such as ./!^$
+EOF
+
+    SPEWFILE = 'data/spewfile'
 
     def listen(m)
-      unless m.message.match(/^!/)
+      unless m.message.match(/^!/) || m.user.nick == "bubbles"
         message = m.message.gsub(/outlander/, m.user.nick)
-        File.write(DATA_FILE, message + "\n", File.size(DATA_FILE), mode: 'a') if  m.message.length > 50
+        File.write(SPEWFILE, message + "\n", File.size(SPEWFILE), mode: 'a') if  m.message.length > 50
       end
     end
 
     def execute(m, pattern)
       safe_pattern = Regexp.compile(pattern).to_s.match(/:(.*)\)/)[1]
-      matches = `grep -i "#{safe_pattern}" #{DATA_FILE}`.split(/\n/)
+      matches = `grep -i "#{safe_pattern}" #{SPEWFILE}`.split(/\n/)
       m.reply matches.length > 0 ? matches[rand(0..matches.length-1)] : "\"#{pattern}\" ain't in the logs!"
     end
 

@@ -15,6 +15,11 @@ module Cinch::Plugins
     set :prefix, //
     listen_to :channel
 
+    set :help, <<-EOF
+outlander
+  He's just this guy, you know?
+EOF
+
     def burp(m)
       blurt = rand(1..2).even? ? (@markov.generate_n_words rand(10..50)) : (@markov.generate_n_sentences 1)
       response = blurt.split(' ').each { |word|

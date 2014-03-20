@@ -3,10 +3,15 @@ require_relative "wunderground"
 require 'cinch'
 
 module Cinch::Plugins
-  class TheFuckingWeather
+  class Fweather
     include Cinch::Plugin
 
     match /fweather (.+)/i
+
+    set :help, <<-EOF
+!fweather [fucking zip / fucking location]
+  A fucking weather report.
+EOF
 
     def initialize(*args)
       super

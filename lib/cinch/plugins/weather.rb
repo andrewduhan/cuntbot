@@ -8,6 +8,11 @@ module Cinch::Plugins
 
     match /weather (.+)/i
 
+    set :help, <<-EOF
+!weather [location or zip]
+  Get the current conditions for a location from wunderground.com
+EOF
+
     def execute(msg, query)
 
       current_conditions = Wunderground::get_conditions(query)

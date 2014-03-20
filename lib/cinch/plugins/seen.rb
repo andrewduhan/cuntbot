@@ -15,6 +15,11 @@ module Cinch::Plugins
     listen_to :channel
     match /seen (.+)/i
 
+    set :help, <<-EOF
+!seen [nick]
+  When a nick was last seen and what they were saying or doing
+EOF
+
     def initialize(*args)
       super
       @users = {}

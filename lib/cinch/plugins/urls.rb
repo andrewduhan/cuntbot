@@ -12,6 +12,11 @@ module Cinch::Plugins
     listen_to :channel
     match /urls ?(.+)?/i
 
+    set :help, <<-EOF
+!urls [number]
+  Show the last [number] urls (max 10)
+EOF
+
     def initialize(*args)
       super
       @urls = []
