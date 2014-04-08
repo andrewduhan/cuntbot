@@ -32,8 +32,6 @@ class CuntbotNote < ActiveYaml::Base
   end
 end
 
-
-
 module Cinch::Plugins
   class Note
     include Cinch::Plugin

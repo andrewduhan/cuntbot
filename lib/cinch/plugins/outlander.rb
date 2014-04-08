@@ -7,7 +7,7 @@ module Cinch::Plugins
 
     def initialize(*args)
       super
-      @markov = MarkyMarkov::TemporaryDictionary.new
+      @markov = MarkyMarkov::TemporaryDictionary.new(1)
       @markov.parse_file "data/BRANE"
       @timer = Time.now
     end
@@ -21,7 +21,10 @@ outlander
 EOF
 
     def burp(m)
-      blurt = rand(1..2).even? ? (@markov.generate_n_words rand(5..30)) : (@markov.generate_n_sentences 1)
+
+      is_full_sentence = rand(1..3).even?
+      blurt = get_blurt(is_full_sentence)
+
       response = blurt.split(' ').each { |word|
         random_number = rand(0..100)
         if random_number > 95
@@ -32,7 +35,7 @@ EOF
       }.join(' ')
 
       # try to not end with dumb stuff
-      response = response.gsub(/ (of|to|the|i|,)$/i,'')
+      response = response.gsub(/ (of|to|the|i|,|my|your)$/i,'')
 
       if rand(0..2) > 0 # 1/3 chance of adding some punctuation
         punctuation = ['!','?'][rand(0..1)]
@@ -49,5 +52,20 @@ EOF
         burp(m)
       end
     end
+
+    def get_blurt(is_full_sentence = false)
+      blurt = nil
+      success = false
+      while !success && blurt.blank?
+        begin
+          blurt = is_full_sentence ? (@markov.generate_n_sentences 1) : (@markov.generate_n_words rand(6..25))
+          success = true
+        rescue ArgumentError => e
+          puts e.to_s
+        end
+      end
+      blurt
+    end
+
   end
 end
