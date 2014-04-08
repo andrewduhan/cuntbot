@@ -21,7 +21,7 @@ outlander
 EOF
 
     def burp(m)
-      blurt = rand(1..2).even? ? (@markov.generate_n_words rand(10..50)) : (@markov.generate_n_sentences 1)
+      blurt = rand(1..2).even? ? (@markov.generate_n_words rand(5..30)) : (@markov.generate_n_sentences 1)
       response = blurt.split(' ').each { |word|
         random_number = rand(0..100)
         if random_number > 95

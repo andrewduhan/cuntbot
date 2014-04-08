@@ -18,13 +18,6 @@ EOF
       if query.empty?
         response << "plugins: " + bot.config.plugins.plugins.map{|plugin| plugin.to_s.split("::").last.downcase}.join(", ")
         response << "\nyou can also type !help [plugin]"
-
-      # elsif plugin = @help.keys.find{|plugin| format_plugin_name(plugin) == query}
-      #   @help[plugin].keys.sort.each do |command|
-      #     debugger
-      #     response << format_command(command, @help[plugin][command], plugin)
-      #   end
-
       else
         response << "never heard of '#{query}'."
       end

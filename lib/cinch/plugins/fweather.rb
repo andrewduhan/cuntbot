@@ -46,18 +46,24 @@ EOF
       temp_f = current_conditions.temp_f.to_f
       display_temp = current_conditions.display_location["country"] == "US" ? current_conditions.temp_f.to_s + "F" : current_conditions.temp_c.to_s + "C"
 
+      # annoy josh by sort of scaling summary to the latitude
+      temp_scaler = 560.0/653.0
+      scaled_temp = temp_f + (( current_conditions.display_location["latitude"].to_f - 15 ) * temp_scaler ) - 10
+
       case
-      when temp_f < 35
+      when scaled_temp < 15
+        general_condition = "seriously fucking freezing"
+      when scaled_temp >= 0 && scaled_temp < 32
         general_condition = "freezing"
-      when temp_f >= 35 && temp_f < 50
+      when scaled_temp >= 32 && scaled_temp < 50
         general_condition = "cold"
-      when temp_f >= 50 && temp_f < 65
+      when scaled_temp >= 50 && scaled_temp < 65
         general_condition = "chilly"
-      when temp_f >= 65 && temp_f < 80
+      when scaled_temp >= 65 && scaled_temp < 80
         general_condition = "nice"
-      when temp_f >= 80 && temp_f < 95
+      when scaled_temp >= 80 && scaled_temp < 95
         general_condition = "warm"
-      when temp_f >= 95
+      when scaled_temp >= 95
         general_condition = "hot"
       else
         general_condition = "derp"
