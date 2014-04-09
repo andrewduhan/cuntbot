@@ -69,8 +69,34 @@ EOF
         general_condition = "derp"
       end
 
+      sub_condition = ""
+      {
+        "drizzle" => "drizzling", "rain" => "rainy", "snow" => "snowing", "ice" => "icy", "hail" => "hailing", "mist" => "misty", "fog" => "foggy",
+        "smoke" => "smoky", "volcanic ash" => "... fucking ashy?", "sand" => "sandy", "haze" => "hazy", "spray" => "spraying", "dust" => "dusty",
+        "thunder" => "thundering", "overcast" => "overcast", "mostly cloudy" => "cloudy", "squalls" => "blowing", "funnel cloud" => "there is a fucking tornado"
+      }.each do |condition, description|
+        if current_conditions.weather.match(/#{condition}/i)
+          sub_condition += " and #{description}."
+        end
+      end
+
+      wind_mph = current_conditions.wind_mph
+      case
+      when wind_mph > 15 && wind_mph < 25
+        sub_condition += " and windy."
+      when wind_mph >= 25 && wind_mph < 40
+        sub_condition += " and fucking windy."
+      when wind_mph >= 40 && wind_mph < 70
+        sub_condition += " and fucking violently windy."
+      when wind_mph >= 70 && wind_mph < 100
+        sub_condition += " and there is probably a fucking hurricane."
+      when wind_mph >= 100
+        sub_condition += " and there is a fucking tornado."
+      end
+
       byline = @bylines[general_condition][rand(0..@bylines[general_condition].length-1)]
-      "#{display_temp} IN #{current_conditions.display_location["city"].upcase}?! IT'S FUCKING #{general_condition.upcase}! #{byline}"
+
+      "#{display_temp} IN #{current_conditions.display_location["city"].upcase}?! IT'S FUCKING #{general_condition.upcase}!#{sub_condition.upcase} #{byline}"
     end
 
   end

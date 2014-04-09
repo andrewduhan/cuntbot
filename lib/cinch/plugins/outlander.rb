@@ -35,7 +35,7 @@ EOF
       }.join(' ')
 
       # try to not end with dumb stuff
-      response = response.gsub(/ (of|to|the|i|,|my|your)$/i,'')
+      response = response.gsub(/ (of|to|the|and|i|,|my|your)$/i,'')
 
       if rand(0..2) > 0 # 1/3 chance of adding some punctuation
         punctuation = ['!','?'][rand(0..1)]
