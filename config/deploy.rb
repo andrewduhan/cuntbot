@@ -1,6 +1,8 @@
 # config valid only for Capistrano 3.1
 lock '3.1.0'
 
+set :rvm_ruby_version, 'ruby-2.1.0@cuntbot'
+
 set :application, 'cuntbot'
 set :repo_url, 'git@github.com:andrewduhan/cuntbot.git'
 set :branch, "master"
@@ -11,13 +13,11 @@ set :branch, "master"
 # Default deploy_to directory is /var/www/my_app
 set :deploy_to, '~/cuntbot'
 
-
-require "rvm/capistrano"
-set :rvm_ruby_string, :local              # use the same ruby as used locally for deployment
-set :rvm_autolibs_flag, "read-only"       # more info: rvm help autolibs
-set :bundle_dir, ''
-set :bundle_flags, '--system --quiet'
-
+# require "rvm/capistrano"
+# set :rvm_ruby_string, :local              # use the same ruby as used locally for deployment
+# set :rvm_autolibs_flag, "read-only"       # more info: rvm help autolibs
+# set :bundle_dir, ''
+# set :bundle_flags, '--system --quiet'
 
 # set :default_env, { rvm_bin_path: '~/.rvm/bin' }
 
