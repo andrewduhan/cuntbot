@@ -55,7 +55,7 @@ namespace :deploy do
 
   task :symlink_config do
     on roles(:all) do
-      execute "cd #{release_path} && bundle install"
+      # execute "cd #{release_path} && bundle install"
       execute  "rm -rf #{release_path}/data   && ln -nfs #{shared_path}/data #{release_path}/data"
       execute  "rm -rf #{release_path}/config && ln -nfs #{shared_path}/config #{release_path}/config"
       execute  "rm -f #{current_path}         && ln -s #{release_path} #{current_path}"
