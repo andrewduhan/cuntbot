@@ -11,6 +11,14 @@ set :branch, "master"
 # Default deploy_to directory is /var/www/my_app
 set :deploy_to, '~/cuntbot'
 
+
+require "rvm/capistrano"
+set :rvm_ruby_string, :local              # use the same ruby as used locally for deployment
+set :rvm_autolibs_flag, "read-only"       # more info: rvm help autolibs
+set :bundle_dir, ''
+set :bundle_flags, '--system --quiet'
+
+
 # set :default_env, { rvm_bin_path: '~/.rvm/bin' }
 
 # Default value for :scm is :git
@@ -36,6 +44,12 @@ set :deploy_to, '~/cuntbot'
 
 # Default value for keep_releases is 5
 # set :keep_releases, 5
+
+# namespace :rvm do
+#   task :trust_rvmrc do
+#     run "rvm rvmrc trust #{release_path}"
+#   end
+# end
 
 namespace :deploy do
 
@@ -73,3 +87,5 @@ namespace :deploy do
   after :publishing, :symlink_config
 
 end
+
+# after :deploy, "rvm:trust_rvmrc"
