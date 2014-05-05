@@ -48,7 +48,8 @@ EOF
 
       # annoy josh by sort of scaling summary to the latitude
       temp_scaler = 560.0/653.0
-      scaled_temp = temp_f + (( current_conditions.display_location["latitude"].to_f - 15 ) * temp_scaler ) - 10
+
+      scaled_temp = temp_f + (( current_conditions.display_location["latitude"].to_f.abs - 15 ) * temp_scaler ) - 10
 
       case
       when scaled_temp < 15

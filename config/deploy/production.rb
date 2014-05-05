@@ -4,7 +4,10 @@
 # server in each group is considered to be the first
 # unless any hosts have the primary property set.
 # Don't declare `role :all`, it's a meta role
-role :app, %w{outlander@mb.xen.prgmr.com}
+
+# role :app, %w{outlander@mb.xen.prgmr.com}
+role :app, %w{outlander@vps21239.vps.ovh.ca}
+
 # role :web, %w{deploy@example.com}
 # role :db,  %w{deploy@example.com}
 
