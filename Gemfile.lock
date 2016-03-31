@@ -19,11 +19,8 @@ GEM
       sshkit (~> 1.2)
     cinch (2.0.12)
     i18n (0.6.9)
-    marky_markov (0.3.5)
-      msgpack
     mini_portile (0.5.2)
     minitest (4.7.5)
-    msgpack (0.5.8)
     multi_json (1.8.4)
     net-scp (1.1.2)
       net-ssh (>= 2.6.5)
@@ -50,5 +47,7 @@ DEPENDENCIES
   capistrano (~> 3.1.0)
   capistrano-rvm (~> 0.1.1)
   cinch (~> 2.0.12)
-  marky_markov (~> 0.3.4)
   nokogiri (~> 1.6.1)
+
+BUNDLED WITH
+   1.11.2

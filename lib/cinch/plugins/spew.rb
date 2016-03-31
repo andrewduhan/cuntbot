@@ -17,14 +17,14 @@ EOF
     def listen(m)
       unless m.message.match(/^!/) || m.user.nick == "bubbles"
         message = m.message.gsub(/outlander/, m.user.nick)
-        File.write(SPEWFILE, message + "\n", File.size(SPEWFILE), mode: 'a') if  m.message.length > 50
+        File.write(SPEWFILE, message + "\n", File.size(SPEWFILE), mode: 'a') if  m.message.length > 30
       end
     end
 
     def execute(m, pattern)
       safe_pattern = Regexp.compile(pattern).to_s.match(/:(.*)\)/)[1]
-      matches = `grep -i "#{safe_pattern}" #{SPEWFILE}`.split(/\n/)
-      m.reply matches.length > 0 ? matches[rand(0..matches.length-1)] : "\"#{pattern}\" ain't in the logs!"
+      matches = File.open(SPEWFILE) { |f| f.grep(/#{safe_pattern}/i) }
+      m.reply matches.length > 0 ? matches.sample : "\"#{pattern}\" ain't in the logs!"
     end
 
   end

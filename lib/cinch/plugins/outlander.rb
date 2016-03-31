@@ -1,5 +1,5 @@
 require 'cinch'
-require 'marky_markov'
+# require 'marky_markov'
 
 module Cinch::Plugins
   class Outlander
@@ -7,8 +7,16 @@ module Cinch::Plugins
 
     def initialize(*args)
       super
-      @markov = MarkyMarkov::TemporaryDictionary.new(1)
-      @markov.parse_file "data/BRANE"
+
+      @brain = {}
+      File.foreach('data/BRANE') do |line|
+        arr = line.scan(/[a-zA-Z0-9'’$%\]\[\)\()]+|[^a-zA-Z0-9'’$%\]\[\)\(]+/).select { |x| x.match( /\S/ ) }
+        arr.each_with_index do |word, i|
+          word = word.strip.downcase
+          @brain[word] ||= []
+          @brain[word].push(arr[i+1].strip.downcase) if arr[i+1]
+        end
+      end
       @timer = Time.now
     end
 
@@ -21,29 +29,8 @@ outlander
 EOF
 
     def burp(m)
-
-      is_full_sentence = rand(1..3).even?
-      blurt = get_blurt(is_full_sentence)
-
-      response = blurt.split(' ').each { |word|
-        random_number = rand(0..100)
-        if random_number > 95
-          word.upcase!
-        elsif random_number < 2
-          word.downcase!
-        end
-      }.join(' ')
-
-      # try to not end with dumb stuff
-      response = response.gsub(/ (of|to|the|and|i|,|my|your)$/i,'')
-
-      if rand(0..2) > 0 # 1/3 chance of adding some punctuation
-        punctuation = ['!','?'][rand(0..1)]
-        response = response.gsub(/[,.;]$/, '')
-        response += punctuation
-      end
       sleep(rand(3..10))
-      m.reply response
+      m.reply get_blurt
     end
 
     def listen(m)
@@ -53,12 +40,48 @@ EOF
       end
     end
 
-    def get_blurt(is_full_sentence = false)
+    def get_blurt
+      min_length = 10
       blurt = nil
       success = false
       while !success && blurt.blank?
         begin
-          blurt = is_full_sentence ? (@markov.generate_n_sentences 1) : (@markov.generate_n_words rand(6..25))
+          chain = []
+          uppercase = rand(10) == 0
+          word = ''
+          while !word.match(/[A-Za-z0-9]/)
+            word = @brain.keys.sample
+          end
+          chain.push( uppercase ? word.upcase : rand(4) == 0 ? word.capitalize : word )
+          loop do
+            if uppercase
+              uppercase = rand(4) == 0
+            else
+              uppercase = rand(10) == 0
+            end
+            if @brain[word] && @brain[word].length > 0
+              word = @brain[word].sample
+              if word.match(/[\.\?\!]/)
+                chain[chain.length - 1] = chain[chain.length - 1] + word if word == '.' && rand(2) == 0
+                break unless (chain.length < min_length) && (rand(chain.length) == 0)
+              else
+                if word.match(/[\,\;]/)
+                  if chain.length > min_length
+                    chain[chain.length - 1] = chain[chain.length - 1] + ['.','','!','?'].sample
+                    break
+                  else
+                    chain[chain.length - 1] = chain[chain.length - 1] + word
+                  end
+                else
+                  chain.push(uppercase ? word.upcase : word)
+                end
+              end
+            else
+              break
+            end
+          end
+          blurt = uppercase ? chain.join(' ').upcase : chain.join(' ')
+          blurt = blurt.gsub(/ :/,":" ).gsub(/ - /,"-" )
           success = true
         rescue ArgumentError => e
           puts e.to_s
