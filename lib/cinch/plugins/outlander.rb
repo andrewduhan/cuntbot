@@ -29,8 +29,9 @@ outlander
 EOF
 
     def burp(m)
+      blurt = get_blurt
       sleep(rand(3..10))
-      m.reply get_blurt
+      m.reply
     end
 
     def listen(m)
@@ -62,7 +63,7 @@ EOF
             if @brain[word] && @brain[word].length > 0
               word = @brain[word].sample
               if word.match(/[\.\?\!]/)
-                chain[chain.length - 1] = chain[chain.length - 1] + word if word == '.' && rand(2) == 0
+                chain[chain.length - 1] = chain[chain.length - 1] + word if (word == '.' && rand(2) == 0) || word != '.'
                 break unless (chain.length < min_length) && (rand(chain.length) == 0)
               else
                 if word.match(/[\,\;]/)
