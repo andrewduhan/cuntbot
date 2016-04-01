@@ -31,7 +31,7 @@ EOF
     def burp(m)
       blurt = get_blurt
       sleep(rand(3..10))
-      m.reply
+      m.reply blurt
     end
 
     def listen(m)
