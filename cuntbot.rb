@@ -15,6 +15,7 @@ require_relative "lib/cinch/plugins/fweather"
 require_relative "lib/cinch/plugins/udict"
 require_relative "lib/cinch/plugins/urls"
 require_relative "lib/cinch/plugins/weather"
+require_relative "lib/cinch/plugins/twss"
 
 setup = YAML.load_file('config/setup.yaml')
 
@@ -35,7 +36,8 @@ setup = YAML.load_file('config/setup.yaml')
       Cinch::Plugins::Spew,
       Cinch::Plugins::Udict,
       Cinch::Plugins::Urls,
-      Cinch::Plugins::Weather
+      Cinch::Plugins::Weather,
+      Cinch::Plugins::Twss
     ]
   end
 end
